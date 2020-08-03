@@ -1,4 +1,4 @@
-const getL = {
+const getl = {
   vec: (x, y) => new getl.Vector(x, y),
   vecGroup: (...args) => getl.VectorGroup.pack(args),
   Vector: class {
