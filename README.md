@@ -1,5 +1,5 @@
 # getlib
-###### v0.0.1
+###### Documentation v0.0.1
 Some random lightweight Game Engine Tools Library that helps to create some casual games for school projects or whatever.
 
 ---
@@ -10,7 +10,19 @@ Some random lightweight Game Engine Tools Library that helps to create some casu
 - Engine
 ---
 ### Vector
-Class responsible for 2d vector manipulation.
+Class responsible for 2D vector manipulation.
+```javascript
+//create
+let myVector = new getL.Vector(10,10)
+//modify
+myVector.add(new getL.Vector(10,10))
+//check is modified
+console.log(myVector.x, myVector.y) // 20, 20
+//create new vector from sum of two vectors
+let otherVector = myVector.plus(new getL.Vector(15,15))
+//myVector will not get modified. The same can be achieved with...
+let otherVector2 = myVector.copy.add(new getL.Vector(15,15))
+```
 ##### Properties
 Name | Type | Description | Constraint
 -----|------|-------------|----------
@@ -63,6 +75,80 @@ Name | Description | Parameter
 -----|-------------|----------
 each | vectorGroup.vectors.forEach shorthand | fn : `function(vector, index)`
 link | Iterate over all the adjacent pairs if arranged circularly | fn : `function(vectorA, vectorB)`
+
+### Node
+An empty shell to create Game Objects
+##### Properties
+Name | Type | Description | Constraint
+-----|------|-------------|----------
+nodes | Array<Node> | Stores all the subnodes | None
+
+##### Methods
+Name | Description | Parameter
+-----|-------------|----------
+render | For rendering | renderProps : Object
+update | For updating | updateProps : Object
+renderNodes | For rendering the subnodes | renderProps : Object
+updateNodes | For updating the subnodes | updateProps : Object
+append | Pushes a Node to the subnodes | ...nodes : ...Array<Node>
+  
+```typescript
+renderProps = {
+  frames : Number, //Amount of frames rendered.
+  ctx : CanvasContext, //Used to draw on the canvas.
+  keyboard: Object<Char, Boolean>, //Used to get keyboard data.
+  mouse: {
+    position : Vector, //Position of the mouse.
+    button : {
+      0 : Boolean, // is mouse primary button down ?
+      1 : Boolean, // is mouse middle button down ? 
+      2 : Boolean, // is mouse secondary button down ?
+    }
+  }
+}
+
+updateProps = {
+  ticks : Number, //Amount of updates.
+  keyboard: Object<Char, Boolean>, //Used to get keyboard data.
+  mouse: {
+    position : Vector, //Position of the mouse.
+    button : {
+      0 : Boolean, // is mouse primary button down ?
+      1 : Boolean, // is mouse middle button down ? 
+      2 : Boolean, // is mouse secondary button down ?
+    }
+  }
+}
+```
+  
+### Engine
+Class responsible of updating, rendering and channeling user inputs.
+```javascript
+let config = {
+  fps: 60, 
+  tps: 60, 
+  canvas: document.getElementById("myCanvas"), 
+  node: myScene,
+  usingKeyboard: true,
+  usingMouse: true
+}
+let engine = new getL.Engine(config)
+engine.run()
+// pause the engine
+engine.stop()
+//destroy the engine : removes the event listeners
+engine.destroy()
+```
+
+##### Config
+Name | Description | Default | Type
+-|-|-|-
+fps | Frames per second | 30 | Number
+tps | Ticks per second | 30 | Number
+canvas | Dom canvas element | undefined | HTMLElement
+usingKeyboard | Listen for keyboard events | false | Boolean
+usingMouse | Listen for mouse events | false | Boolean
+
 
 
 
