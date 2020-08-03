@@ -8,6 +8,10 @@ Some random lightweight Game Engine Tools Library that helps to create some casu
 - VectorGroup
 - Node
 - Engine
+### Utility
+- Colision
+- vec
+- vecGroup
 ---
 ### Vector
 Class responsible for 2D vector manipulation.
@@ -149,6 +153,15 @@ canvas | Dom canvas element | undefined | HTMLElement
 usingKeyboard | Listen for keyboard events | false | Boolean
 usingMouse | Listen for mouse events | false | Boolean
 
-
-
-
+---
+### Collision
+Simple collision detection utility. Very unoptimised for large quantities of objects.
+Name | Description | Return type | Param 0 | Param 1 | Param 2 | Param 4
+-----|-------------|-------------|---------|---------|---------|---------
+rectPoint | Checks if a point is inside a rectangle. | Boolean | Rectangle position : `Vector` | rectangle size : `Vector` | point position : `Vector` | 
+shapePoint | Checks if a point is inside a shape formed with vertices. | Boolean | shape : `VectorGroup` | point position : `Vector` | 
+rects | Checks if two rectangle collides. | Boolean | Rectangle A position : `Vector` | rectangle A size : `Vector` | rectangle B position : `Vector` | rectangle B size : `Vector`
+lines | Checks if two lines crosses. | Boolean | line A start : `Vector` | line A end : `Vector` | line B start : `Vector` | line B end : `Vector`
+lines_point | Get the intersetion point of two lines, if lines touches and are parallel return `true`, otherwise return `false` | Vector or Boolean | line A start : `Vector` | line A end : `Vector` | line B start : `Vector` | line B end : `Vector`
+shapeLine | Checks if a shape and a line are colliding | Boolean | shape : `VectorGroup` | line start : `Vector` | line end : `Vector` | 
+shapes | Checks if two shapes are colliding | Boolean | shape A : `VectorGroup` | shape B : `VectorGroup` | | 
