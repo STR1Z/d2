@@ -17,15 +17,15 @@ Some random lightweight Game Engine Tools Library that helps to create some casu
 Class responsible for 2D vector manipulation.
 ```javascript
 //create
-let myVector = new getL.Vector(10,10)
+let myVector = new getl.Vector(10,10)
 //modify
-myVector.add(new getL.Vector(10,10))
+myVector.add(new getl.Vector(10,10))
 //check is modified
 console.log(myVector.x, myVector.y) // 20, 20
 //create new vector from sum of two vectors
-let otherVector = myVector.plus(new getL.Vector(15,15))
+let otherVector = myVector.plus(new getl.Vector(15,15))
 //myVector will not get modified. The same can be achieved with...
-let otherVector2 = myVector.copy.add(new getL.Vector(15,15))
+let otherVector2 = myVector.copy.add(new getl.Vector(15,15))
 ```
 ##### Properties
 Name | Type | Description | Constraint
@@ -136,7 +136,7 @@ let config = {
   usingKeyboard: true,
   usingMouse: true
 }
-let engine = new getL.Engine(config)
+let engine = new getl.Engine(config)
 engine.run()
 // pause the engine
 engine.stop()
@@ -169,12 +169,12 @@ shapes | Checks if two shapes are colliding | Boolean | shape A : `VectorGroup` 
 ### vec
 Shorthand to create a vector.
 ```javascript
-let myVector = getL.vec(0,0)
+let myVector = getl.vec(0,0)
 ```
 ### vecGroup
 Shorthand to create a vector group.
 ```javascript
-let myGroup = getL.vecGroup(
+let myGroup = getl.vecGroup(
   [0,0],
   [0,1],
   [1,1],
