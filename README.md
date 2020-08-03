@@ -140,7 +140,7 @@ let engine = new getL.Engine(config)
 engine.run()
 // pause the engine
 engine.stop()
-//destroy the engine : removes the event listeners
+//destroy the engine : removes all event listeners
 engine.destroy()
 ```
 
