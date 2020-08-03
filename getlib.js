@@ -106,7 +106,7 @@ const getl = {
         )
       );
     }
-    get unpack() {
+    get array() {
       return this.vectors.map((v) => [v.x, v.y]);
     }
     get size() {
@@ -173,12 +173,12 @@ const getl = {
     append = (...e) => this.nodes.push(...e);
   },
   Engine: class {
-    constructor({ fps = 30, tps = 30, canvas, entity, usingKeyboard = false, usingMouse = false }) {
+    constructor({ fps = 30, tps = 30, canvas, node, usingKeyboard = false, usingMouse = false }) {
       this.fps = fps;
       this.tps = tps;
       this.canvas = canvas;
       this.ctx = this.canvas.getContext("2d");
-      this.entity = entity;
+      this.node = node;
       this.ticks = this.frames = 0;
       this.removeKeyboardEventListener = () => {};
       this.removeMouseEventListener = () => {};
@@ -218,11 +218,11 @@ const getl = {
       }
     }
     render() {
-      this.entity.render({ frames: this.frames, ctx: this.ctx, keyboard: this.keyboard, mouse: this.mouse });
+      this.node.render({ frames: this.frames, ctx: this.ctx, keyboard: this.keyboard, mouse: this.mouse });
       this.frames++;
     }
     update() {
-      this.entity.update({ ticks: this.ticks, keyboard: this.keyboard, mouse: this.mouse });
+      this.node.update({ ticks: this.ticks, keyboard: this.keyboard, mouse: this.mouse });
       this.ticks++;
     }
     run() {
