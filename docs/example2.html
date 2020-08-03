@@ -17,7 +17,7 @@
   <body>
     <div class="container">
       <h3 class="mt-4">Game Engine Tools Library</h3>
-      <h4 class="mb-4">Example 1 - Keyboard Inputs</h4>
+      <h4 class="mb-4">Example 2 - Mouse Position</h4>
 
       <div class="row">
         <div class="col-lg-5">
@@ -54,13 +54,11 @@
           /* setting up player properties */
           this.position = vec(100, 100);
           this.size = vec(50, 50);
+          this.velocity = vec(0, 0);
         }
-        update({ keyboard: k }) {
-          /* create moving vector with keyboard WASD keys */
-          let moveX = (k.d ? 2 : 0) - (k.a ? 2 : 0);
-          let moveY = (k.s ? 2 : 0) - (k.w ? 2 : 0);
-          /* translate position with the vector */
-          this.position.add(vec(moveX, moveY));
+        update({ mouse }) {
+          this.velocity.add(this.position.minus(mouse.position).divn(10));
+          this.position.add(this.velocity);
         }
         render({ ctx }) {
           /* render the player */
@@ -76,7 +74,7 @@
       let engine = new Engine({
         fps: 60,
         tps: 60,
-        usingKeyboard: true,
+        usingMouse: true,
         canvas: document.getElementById("canvas"),
         node: scene,
       });

@@ -38,10 +38,12 @@ const getl = {
     muln(n) {
       this.x *= n;
       this.y *= n;
+      return this;
     }
     divn(n) {
       this.x /= n;
       this.y /= n;
+      return this;
     }
     plus = (v) => new this.constructor(this.x + v.x, this.y + v.y);
     minus = (v) => new this.constructor(this.x - v.x, this.y - v.y);
