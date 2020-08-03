@@ -12,38 +12,76 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib/getlib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.min.js"></script>
   </head>
   <body>
     <div class="container">
       <h3 class="mt-4">Game Engine Tools Library</h3>
-      <h4 class="mb-4">Example 1</h4>
+      <h4 class="mb-4">Example 1 - Keyboard Inputs</h4>
 
       <div class="row">
-        <div class="col-lg">
-          <canvas id="myCanvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
+        <div class="col-lg-5">
+          <canvas id="canvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
         </div>
-        <div class="col-lg">
+        <div class="col-lg-7">
           <pre style="text-align: left;"><code class="javascript" id="show"></code></pre>
         </div>
       </div>
     </div>
     <script id="source">
       /* extract vec, Collision, Engine, Node */
-      const { vec, Collision, Engine, Node } = getL;
+      const { vec, Collision, Engine, Node } = getl;
       /* getting the canvas */
 
-      let canvas = document.getElementById("myCanvas");
       class Scene extends Node {
         render(props) {
           /* extract ctx */
           let { ctx } = props;
           /* draw background */
-          ctx.fillStyle = "black";
+          ctx.fillStyle = "white";
           ctx.fillRect(0, 0, 480, 480);
-          this.renderNodes();
+          /* render subnodes */
+          this.renderNodes(props);
+        }
+        update(props) {
+          /* update subnodes */
+          this.updateNodes(props);
         }
       }
+      class Player extends Node {
+        constructor() {
+          super();
+          /* setting up player properties */
+          this.position = vec(100, 100);
+          this.size = vec(50, 50);
+        }
+        update({ keyboard: k }) {
+          /* create moving vector with keyboard WASD keys */
+          let moveX = (k.d ? 2 : 0) - (k.a ? 2 : 0);
+          let moveY = (k.s ? 2 : 0) - (k.w ? 2 : 0);
+          /* translate position with the vector */
+          this.position.add(vec(moveX, moveY));
+        }
+        render({ ctx }) {
+          /* render the player */
+          ctx.fillStyle = "red";
+          ctx.fillRect(...this.position.array, ...this.size.array);
+        }
+      }
+      /* create the scene instance */
+      let scene = new Scene();
+      /* add the player to the scene */
+      scene.append(new Player());
+      /* create the engine */
+      let engine = new Engine({
+        fps: 60,
+        tps: 60,
+        usingKeyboard: true,
+        canvas: document.getElementById("canvas"),
+        node: scene,
+      });
+      /* start the engine */
+      engine.run();
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", (event) => {
