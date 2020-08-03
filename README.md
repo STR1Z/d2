@@ -165,3 +165,19 @@ lines | Checks if two lines crosses. | Boolean | line A start : `Vector` | line 
 lines_point | Get the intersetion point of two lines, if lines touches and are parallel return `true`, otherwise return `false` | Vector or Boolean | line A start : `Vector` | line A end : `Vector` | line B start : `Vector` | line B end : `Vector`
 shapeLine | Checks if a shape and a line are colliding | Boolean | shape : `VectorGroup` | line start : `Vector` | line end : `Vector` | 
 shapes | Checks if two shapes are colliding | Boolean | shape A : `VectorGroup` | shape B : `VectorGroup` | | 
+
+### vec
+Shorthand to create a vector.
+```javascript
+let myVector = getL.vec(0,0)
+```
+### vecGroup
+Shorthand to create a vector group.
+```javascript
+let myGroup = getL.vecGroup(
+  [0,0],
+  [0,1],
+  [1,1],
+  [1,0]
+)
+```
