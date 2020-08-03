@@ -6,12 +6,15 @@ const getl = {
       this.x = x;
       this.y = y;
     }
-    point(v) {
+    point(a) {
       let length = this.length;
-      this.x = length * Math.cos(v);
-      this.y = length * Math.sin(v);
+      this.x = length * Math.cos(a);
+      this.y = length * Math.sin(a);
       return this;
     }
+    translate = (v) => this.add(v);
+    rotate = (v) => this.point(v + this.angle);
+    scale = (v) => (v instanceof this.constructor ? this.mul(v) : this.muln(v));
     add(v) {
       this.x += v.x;
       this.y += v.y;
@@ -46,9 +49,7 @@ const getl = {
     timesn = (v) => new this.constructor(this.x * v, this.y * v);
     over = (v) => new this.constructor(this.x / v.x, this.y / v.y);
     overn = (v) => new this.constructor(this.x / v, this.y / v);
-    translate = (v) => this.add(v);
-    rotate = (v) => this.point(v + this.angle);
-    scale = (v) => (v instanceof this.constructor ? this.mul(v) : this.muln(v));
+
     get length() {
       return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
