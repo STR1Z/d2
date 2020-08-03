@@ -117,8 +117,8 @@ const getl = {
     }
   },
   Collision: {
-    insideRect: (ap, as, p) => Math.abs(ap.x - p.x) * 2 < as.x && Math.abs(ap.y - p.y) * 2 < as.y,
-    insideVertices(g, p) {
+    rectPoint: (ap, as, p) => Math.abs(ap.x - p.x) * 2 < as.x && Math.abs(ap.y - p.y) * 2 < as.y,
+    shapePoint(g, p) {
       let inside = false;
       for (let i = 0, j = g.size - 1; i < g.size; j = i++) {
         let xi = g.vectors[i].x,
@@ -129,15 +129,15 @@ const getl = {
       }
       return inside;
     },
-    rectCollides: (ap, as, bp, bs) => Math.abs(ap.x - bp.x) * 2 < as.x + bs.x && Math.abs(ap.y - bp.y) * 2 < as.y + bs.y,
-    lineCrosses(a1, a2, b1, b2) {
+    rects: (ap, as, bp, bs) => Math.abs(ap.x - bp.x) * 2 < as.x + bs.x && Math.abs(ap.y - bp.y) * 2 < as.y + bs.y,
+    lines(a1, a2, b1, b2) {
       let det = (a2.x - a1.x) * (b2.y - b1.y) - (b2.x - b1.x) * (a2.y - a1.y);
       if (det === 0) return false;
       let lambda = ((b2.y - b1.y) * (b2.x - a1.x) + (b1.x - b2.x) * (b2.y - a1.y)) / det;
       let gamma = ((a1.y - a2.y) * (b2.x - a1.x) + (a2.x - a1.x) * (b2.y - a1.y)) / det;
       return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
     },
-    lineIntersection(a1, a2, b1, b2) {
+    lines_point(a1, a2, b1, b2) {
       let a_m = (a2.y - a1.y) / (a2.x - a1.x) + 1e-100;
       let a_b = a1.y - a_m * a1.x;
       let b_m = (b2.y - b1.y) / (b2.x - b1.x) + 1e-100;
@@ -147,12 +147,12 @@ const getl = {
       if (Math.min(Math.min(a1.x, a2.x), Math.min(b1.x, b2.x)) < x && x < Math.max(Math.max(a1.x, a2.x), Math.max(b1.x, b2.x))) return new getl.Vector(x, a_m * x + a_b);
       return false;
     },
-    linesCrossesOne(group, p1, p2) {
+    shapeLine(group, p1, p2) {
       for (let i = 1; i < group.size; i++) if (getl.Collision.lineCrosses(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
       if (getl.Collision.lineCrosses(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
       return false;
     },
-    linesCrosses(target, g) {
+    shapes(target, g) {
       for (let i = 1; i < target.size; i++) if (getl.Collision.linesCrossesOne(g, target.vectors[i - 1], target.vectors[i])) return true;
       if (getl.Collision.linesCrossesOne(g, target.vectors[target.size - 1], target.vectors[0])) return true;
       return false;
