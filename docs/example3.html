@@ -12,7 +12,8 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script> -->
+    <script src="/getlib.js"></script>
   </head>
   <body>
     <div class="container">
@@ -66,13 +67,13 @@
       /* create the scene instance */
       let scene = new Scene();
       /* add the floor to the scene */
-      let floor = new Box(vec(40, 400), vec(400, 90), "white");
+      let floor = new Box(vec(40, 400), vec(400, 0.2), "white");
       scene.append(floor);
       /* create the box */
       let box = new Box(vec(100, 100), vec(50, 50), "red");
       /* modify the box update */
       box.update = () => {
-        if (box.velocity.y == 0) box.velocity = vec(0, 1);
+        if (box.velocity.y == 0) box.velocity = vec(0, 20);
         box.position.add(box.velocity);
         if (Collision.rects(box.position, box.size, floor.position, floor.size)) box.velocity.muln(-1);
         let acceleration = vec(0, 1);
