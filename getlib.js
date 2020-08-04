@@ -172,7 +172,9 @@ const getl = {
     updateNodes(...args) {
       for (let n of this.nodes) n.update(...args);
     }
-    append = (...e) => this.nodes.push(...e);
+    append(...e) {
+      this.nodes.push(...e);
+    }
   },
   Engine: class {
     constructor({ fps = 30, tps = 30, canvas, node, usingKeyboard = false, usingMouse = false }) {

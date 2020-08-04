@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example 1</title>
+    <title>Example 3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
     <link
       rel="stylesheet"
@@ -12,8 +12,8 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script> -->
-    <script src="/getlib.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script>
+    <!-- <script src="/getlib.js"></script> -->
   </head>
   <body>
     <div class="container">
@@ -70,13 +70,15 @@
       let floor = new Box(vec(40, 400), vec(400, 10), "white");
       scene.append(floor);
       /* create the box */
-      let box = new Box(vec(100, 100), vec(50, 50), "red");
+      let box = new Box(vec(100, 10), vec(50, 50), "red");
       /* modify the box update */
       box.update = () => {
-        let acceleration = vec(0, 1);
+        let acceleration = vec(0, 0.1);
         box.velocity.add(acceleration);
-        box.position.add(box.velocity);
-        if (Collision.rects(box.position, box.size, floor.position, floor.size)) box.velocity.muln(-1);
+        let futurePosition = box.position.plus(box.velocity);
+        if (Collision.rects(futurePosition, box.size, floor.position, floor.size)) return box.velocity.muln(-0.9);
+        /* remove jittering */
+        if (box.velocity.length > 0.1) box.position.add(box.velocity);
       };
       /* add the Box to the scene */
       scene.append(box);

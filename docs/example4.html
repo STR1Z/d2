@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Example 4</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script> -->
+    <script src="/getlib.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="mt-4">Game Engine Tools Library</h3>
+      <h4 class="mb-4">Example 4 - Circle Collisions</h4>
+
+      <div class="row">
+        <div class="col-lg-5">
+          <canvas id="canvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
+        </div>
+        <div class="col-lg-7">
+          <pre style="text-align: left;"><code class="javascript" id="show"></code></pre>
+        </div>
+      </div>
+    </div>
+    <script id="source">
+      /* extract vec, Collision, Engine, Node */
+      const { vec, Collision, Engine, Node } = getl;
+      /* getting the canvas */
+
+      class Scene extends Node {
+        render(props) {
+          /* extract ctx */
+          let { ctx } = props;
+          /* draw background */
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, 480, 480);
+          /* render subnodes */
+          this.renderNodes(props);
+        }
+        update(props) {
+          /* update subnodes and passing all of its nodes to the subnodes*/
+          this.updateNodes(props, this.nodes);
+        }
+        append(...nodes) {
+          nodes.forEach((node, index) => (node.id = index));
+          this.nodes.push(...nodes);
+        }
+      }
+      class Ball extends Node {
+        constructor() {
+          super();
+          /* setting up Ball properties */
+          this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+          this.radius = Math.random() * 10 + 20;
+
+          let xPosition = Math.random() * (480 - this.radius * 2) + this.radius;
+          let yPosition = Math.random() * (480 - this.radius * 2) + this.radius;
+          this.position = vec(xPosition, yPosition);
+
+          this.velocity = vec(Math.random() * 2 - 1, Math.random() * 2 - 1);
+        }
+        collide(nodes) {
+          for (let i = this.id + 1; i < nodes.length; i++) {
+            let difference = nodes[i].position.minus(this.position);
+            let distance = difference.length;
+            let collideDistance = nodes[i].radius + this.radius;
+            if (distance > collideDistance) return;
+            let collideAngle = difference.angle;
+            let collisionPoint = vec(collideDistance, 0).point(collideAngle);
+            let acceleration = collisionPoint.minus(nodes[i].position).muln(0.05);
+            this.velocity.sub(acceleration);
+            nodes[i].velocity.add(acceleration);
+          }
+        }
+        walls() {
+          /* Check x */
+          if (this.position.x < this.radius) {
+            this.velocity.x *= -0.8;
+            this.position.x = this.radius;
+            this.velocity.y *= 0.8;
+          } else if (this.position.x > 480 - this.radius) {
+            this.velocity.x *= -0.8;
+            this.position.x = 480 - this.radius;
+            this.velocity.y *= 0.8;
+          }
+          /* Check y */
+          if (this.position.y < this.radius) {
+            this.velocity.y *= -0.8;
+            this.position.y = this.radius;
+            this.velocity.x *= 0.8;
+          } else if (this.position.y > 480 - this.radius) {
+            this.velocity.y *= -0.8;
+            this.position.y = 480 - this.radius;
+            this.velocity.x *= 0.8;
+          }
+        }
+        update(_, nodes) {
+          let acceleration = vec(0, 1);
+          this.collide(nodes);
+          this.walls();
+          this.velocity.add(acceleration);
+          this.position.add(this.velocity);
+        }
+        render({ ctx }) {
+          /* render the Ball */
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.ellipse(...this.position.array, this.radius, this.radius, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      /* create the scene instance */
+      let scene = new Scene();
+      /* add the Ball to the scene */
+      scene.append(
+        ...Array(30)
+          .fill()
+          .map(() => new Ball())
+      );
+      /* create the engine */
+      let engine = new Engine({
+        fps: 60,
+        tps: 60,
+        canvas: document.getElementById("canvas"),
+        node: scene,
+      });
+      /* start the engine */
+      engine.run();
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        document.getElementById("show").innerText = document.getElementById("source").innerText.replace(/      /g, "");
+        hljs.highlightBlock(document.getElementById("show"));
+      });
+    </script>
+  </body>
+</html>
