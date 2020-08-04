@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example 1</title>
+    <title>Example 2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
     <link
       rel="stylesheet"
@@ -48,28 +48,41 @@
           this.updateNodes(props);
         }
       }
-      class Player extends Node {
+      class Planet extends Node {
         constructor() {
           super();
-          /* setting up player properties */
-          this.position = vec(100, 100);
-          this.size = vec(50, 50);
+          /* setting up Planet properties */
+          this.position = vec(Math.random() * 480, Math.random() * 480);
+          this.radius = Math.random() * 5 + 5;
           this.velocity = vec(0, 0);
+          this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
         }
         update({ mouse }) {
-          this.velocity.add(this.position.minus(mouse.position).divn(10));
+          this.velocity.add(mouse.position.minus(this.position).overn(1000 * this.radius));
           this.position.add(this.velocity);
         }
-        render({ ctx }) {
-          /* render the player */
-          ctx.fillStyle = "red";
-          ctx.fillRect(...this.position.array, ...this.size.array);
+        render({ ctx, mouse }) {
+          /* render line connecting mouse to Planet */
+          ctx.strokeStyle = "white";
+          ctx.beginPath();
+          ctx.moveTo(...mouse.position.array);
+          ctx.lineTo(...this.position.array);
+          ctx.stroke();
+          /* render the Planet */
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.ellipse(...this.position.array, this.radius, this.radius, 0, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
       /* create the scene instance */
       let scene = new Scene();
-      /* add the player to the scene */
-      scene.append(new Player());
+      /* add the Planet to the scene */
+      scene.append(
+        ...Array(50)
+          .fill()
+          .map(() => new Planet())
+      );
       /* create the engine */
       let engine = new Engine({
         fps: 60,

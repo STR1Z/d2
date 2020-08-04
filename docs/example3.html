@@ -17,7 +17,7 @@
   <body>
     <div class="container">
       <h3 class="mt-4">Game Engine Tools Library</h3>
-      <h4 class="mb-4">Example 1 - Keyboard Inputs</h4>
+      <h4 class="mb-4">Example 3 - Rectangle Collision</h4>
 
       <div class="row">
         <div class="col-lg-5">
@@ -48,30 +48,38 @@
           this.updateNodes(props);
         }
       }
-      class Player extends Node {
-        constructor() {
+      class Box extends Node {
+        constructor(position, size, color) {
           super();
-          /* setting up Player properties */
-          this.position = vec(100, 100);
-          this.size = vec(50, 50);
-        }
-        update({ keyboard: k }) {
-          /* create moving vector with keyboard WASD keys */
-          let moveX = (k.d ? 2 : 0) - (k.a ? 2 : 0);
-          let moveY = (k.s ? 2 : 0) - (k.w ? 2 : 0);
-          /* translate position with the vector */
-          this.position.add(vec(moveX, moveY));
+          /* setting up Box properties */
+          this.position = position;
+          this.size = size;
+          this.velocity = vec(0, 0);
+          this.color = color;
         }
         render({ ctx }) {
-          /* render the Player */
-          ctx.fillStyle = "red";
+          /* render the Box */
+          ctx.fillStyle = this.color;
           ctx.fillRect(...this.position.array, ...this.size.array);
         }
       }
       /* create the scene instance */
       let scene = new Scene();
-      /* add the Player to the scene */
-      scene.append(new Player());
+      /* add the floor to the scene */
+      let floor = new Box(vec(40, 400), vec(400, 90), "white");
+      scene.append(floor);
+      /* create the box */
+      let box = new Box(vec(100, 100), vec(50, 50), "red");
+      /* modify the box update */
+      box.update = () => {
+        if (box.velocity.y == 0) box.velocity = vec(0, 1);
+        box.position.add(box.velocity);
+        if (Collision.rects(box.position, box.size, floor.position, floor.size)) box.velocity.muln(-1);
+        let acceleration = vec(0, 1);
+        // box.velocity.add(acceleration);
+      };
+      /* add the Box to the scene */
+      scene.append(box);
       /* create the engine */
       let engine = new Engine({
         fps: 60,

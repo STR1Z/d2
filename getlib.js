@@ -131,7 +131,7 @@ const getl = {
       }
       return inside;
     },
-    rects: (ap, as, bp, bs) => Math.abs(ap.x - bp.x) * 2 < as.x + bs.x && Math.abs(ap.y - bp.y) * 2 < as.y + bs.y,
+    rects: (ap, as, bp, bs) => ap.x < bp.x + bs.x && ap.x + as.x > bp.x && ap.y < bp.y + as.y && ap.y + as.y > bp.y,
     lines(a1, a2, b1, b2) {
       let det = (a2.x - a1.x) * (b2.y - b1.y) - (b2.x - b1.x) * (a2.y - a1.y);
       if (det === 0) return false;
