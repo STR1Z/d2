@@ -38,6 +38,8 @@ let otherVector = myVector.plus(new d2.Vector(15, 15));
 let otherVector2 = myVector.copy.add(new d2.Vector(15, 15));
 ```
 
+- chaining methods that returns a NEW vector is not recommended.
+
 ##### Properties
 
 | Name   | Type   | Description                        | Constraint |
@@ -110,7 +112,7 @@ A wrapper that contains multiple vectors and **have most of the methods from the
 | ---- | ------------------------------ | -------------- |
 | pack | Returns a vector from a matrix | `Array<[x,y]>` |
 
-##### Iterative methods
+##### Iteration methods
 
 | Name | Description                                                | Parameter                    |
 | ---- | ---------------------------------------------------------- | ---------------------------- |
@@ -119,13 +121,13 @@ A wrapper that contains multiple vectors and **have most of the methods from the
 
 ### Node
 
-An empty shell to create Game Objects
+An empty shell to create Game Objects.
 
 ##### Properties
 
-| Name  | Type        | Description             | Constraint |
-| ----- | ----------- | ----------------------- | ---------- |
-| nodes | Array<Node> | Stores all the subnodes | None       |
+| Name  | Type          | Description             | Constraint |
+| ----- | ------------- | ----------------------- | ---------- |
+| nodes | `Array<Node>` | Stores all the subnodes | None       |
 
 ##### Methods
 
@@ -204,13 +206,13 @@ engine.destroy();
 Simple collision detection utility. Very unoptimised for large quantities of objects.
 Name | Description | Return type | Param 0 | Param 1 | Param 2 | Param 4
 -----|-------------|-------------|---------|---------|---------|---------
-rectPoint | Checks if a point is inside a rectangle. | Boolean | Rectangle position `Vector` | rectangle size `Vector` | point position `Vector` |
-shapePoint | Checks if a point is inside a shape formed with vertices. | Boolean | shape `VectorGroup` | point position `Vector` |
-rects | Checks if two rectangle collides. | Boolean | Rectangle A position `Vector` | rectangle A size `Vector` | rectangle B position `Vector` | rectangle B size `Vector`
-lines | Checks if two lines crosses. | Boolean | line A start `Vector` | line A end `Vector` | line B start `Vector` | line B end `Vector`
-lines_point | Get the intersetion point of two lines, if lines touches and are parallel return `true`, otherwise return `false` | Vector or Boolean | line A start `Vector` | line A end `Vector` | line B start `Vector` | line B end `Vector`
-shapeLine | Checks if a shape and a line are colliding | Boolean | shape `VectorGroup` | line start `Vector` | line end `Vector` |
-shapes | Checks if two shapes are colliding | Boolean | shape A `VectorGroup` | shape B `VectorGroup` | |
+rectPoint | Checks if a point is inside a rectangle. | `Boolean` | `Vector` Rectangle position | `Vector` rectangle size | `Vector` point position |
+shapePoint | Checks if a point is inside a shape formed with vertices. | `Boolean` | `VectorGroup` shape | `Vector` point position |
+rects | Checks if two rectangle collides. | `Boolean` | `Vector` Rectangle A position |`Vector` rectangle A size | `Vector` rectangle B position | `Vector` rectangle B size
+lines | Checks if two lines crosses. | `Boolean` | `Vector` line A start | `Vector` line A end | `Vector` line B start | `Vector` line B end
+lines_point | Get the intersetion point of two lines, if lines touches and are parallel return `true`, otherwise return `false` | `Vector` or `Boolean` | `Vector`line A start | `Vector` line A end | `Vector` line B start | `Vector` line B end
+shapeLine | Checks if a shape and a line are colliding | `Boolean` | `VectorGroup` shape | `Vector` line start | `Vector` line end |
+shapes | Checks if two shapes are colliding | `Boolean` | `VectorGroup` shape A | `VectorGroup` shape B |
 
 ### vec
 
