@@ -52,6 +52,10 @@ const getl = {
     over = (v) => new this.constructor(this.x / v.x, this.y / v.y);
     overn = (v) => new this.constructor(this.x / v, this.y / v);
 
+    *[Symbol.iterator]() {
+      yield this.x;
+      yield this.y;
+    }
     get length() {
       return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
@@ -150,13 +154,13 @@ const getl = {
       return false;
     },
     shapeLine(group, p1, p2) {
-      for (let i = 1; i < group.size; i++) if (getl.Collision.lineCrosses(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
-      if (getl.Collision.lineCrosses(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
+      for (let i = 1; i < group.size; i++) if (getl.Collision.lines(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
+      if (getl.Collision.lines(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
       return false;
     },
     shapes(target, g) {
-      for (let i = 1; i < target.size; i++) if (getl.Collision.linesCrossesOne(g, target.vectors[i - 1], target.vectors[i])) return true;
-      if (getl.Collision.linesCrossesOne(g, target.vectors[target.size - 1], target.vectors[0])) return true;
+      for (let i = 1; i < target.size; i++) if (getl.Collision.shapeLine(g, target.vectors[i - 1], target.vectors[i])) return true;
+      if (getl.Collision.shapeLine(g, target.vectors[target.size - 1], target.vectors[0])) return true;
       return false;
     },
   },

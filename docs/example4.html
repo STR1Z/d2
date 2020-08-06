@@ -54,61 +54,59 @@
         }
       }
       class Ball extends Node {
-        constructor() {
+        constructor(radius) {
           super();
           /* setting up Ball properties */
           this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-          this.radius = Math.random() * 10 + 20;
+          this.radius = Math.random() * 20 + 20;
 
           let xPosition = Math.random() * (480 - this.radius * 2) + this.radius;
           let yPosition = Math.random() * (480 - this.radius * 2) + this.radius;
           this.position = vec(xPosition, yPosition);
-
-          this.velocity = vec(Math.random() * 2 - 1, Math.random() * 2 - 1);
+          this.velocity = vec(Math.random() * 4 - 2, Math.random() * 4 - 2);
         }
         collide(nodes) {
           for (let i = this.id + 1; i < nodes.length; i++) {
             let difference = nodes[i].position.minus(this.position);
             let distance = difference.length;
             let collideDistance = nodes[i].radius + this.radius;
-            if (distance > collideDistance) return;
-            let collideAngle = difference.angle;
-            let collisionPoint = vec(collideDistance, 0).point(collideAngle);
-            let acceleration = collisionPoint.minus(nodes[i].position).muln(0.05);
-            this.velocity.sub(acceleration);
-            nodes[i].velocity.add(acceleration);
+            if (distance < collideDistance) {
+              let collideAngle = difference.angle;
+              let acceleration = vec(collideDistance - distance, 0).point(collideAngle);
+              this.velocity.sub(acceleration.timesn((nodes[i].radius / collideDistance) * 0.8));
+              nodes[i].velocity.add(acceleration.timesn((this.radius / collideDistance) * 0.8));
+            }
           }
         }
         walls() {
           /* Check x */
+          let bounce = 0.5;
           if (this.position.x < this.radius) {
-            this.velocity.x *= -0.8;
+            this.velocity.x *= -bounce;
             this.position.x = this.radius;
-            this.velocity.y *= 0.8;
           } else if (this.position.x > 480 - this.radius) {
-            this.velocity.x *= -0.8;
+            this.velocity.x *= -bounce;
             this.position.x = 480 - this.radius;
-            this.velocity.y *= 0.8;
           }
           /* Check y */
           if (this.position.y < this.radius) {
-            this.velocity.y *= -0.8;
+            this.velocity.y *= -bounce;
             this.position.y = this.radius;
-            this.velocity.x *= 0.8;
           } else if (this.position.y > 480 - this.radius) {
-            this.velocity.y *= -0.8;
+            this.velocity.y *= -bounce;
             this.position.y = 480 - this.radius;
-            this.velocity.x *= 0.8;
           }
         }
-        update(_, nodes) {
-          let acceleration = vec(0, 1);
+
+        update({ mouse }, nodes) {
+          let acceleration = vec(0, 0.9);
           this.collide(nodes);
-          this.walls();
-          this.velocity.add(acceleration);
           this.position.add(this.velocity);
+          this.walls();
+
+          this.velocity.add(acceleration);
         }
-        render({ ctx }) {
+        render({ ctx, mouse }) {
           /* render the Ball */
           ctx.fillStyle = this.color;
           ctx.beginPath();
@@ -119,8 +117,9 @@
       /* create the scene instance */
       let scene = new Scene();
       /* add the Ball to the scene */
+
       scene.append(
-        ...Array(30)
+        ...Array(15)
           .fill()
           .map(() => new Ball())
       );
@@ -130,6 +129,7 @@
         tps: 60,
         canvas: document.getElementById("canvas"),
         node: scene,
+        usingMouse: true,
       });
       /* start the engine */
       engine.run();

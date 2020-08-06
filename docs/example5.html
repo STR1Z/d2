@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example 1</title>
+    <title>Example 5</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
     <link
       rel="stylesheet"
@@ -18,12 +18,12 @@
   <body>
     <div class="container">
       <h3 class="mt-4">Game Engine Tools Library</h3>
-      <h4 class="mb-4">Example 1 - Keyboard Inputs</h4>
+      <h4 class="mb-4">Example 5 - Line Collision</h4>
 
       <div class="row">
         <div class="col-lg-5">
           <canvas id="canvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
-          WASD to move the square.
+          Hold primary mouse button to rotate shape.
         </div>
         <div class="col-lg-7">
           <pre style="text-align: left;"><code class="javascript" id="show"></code></pre>
@@ -31,58 +31,54 @@
       </div>
     </div>
     <script id="source">
-      /* extract vec, Collision, Engine, Node */
-      const { vec, Collision, Engine, Node } = getl;
-      /* getting the canvas */
+      const { vec, vecGroup, Collision, Engine, Node } = getl;
 
       class Scene extends Node {
         render(props) {
-          /* extract ctx */
           let { ctx } = props;
-          /* draw background */
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, 480, 480);
-          /* render subnodes */
           this.renderNodes(props);
         }
         update(props) {
-          /* update subnodes */
           this.updateNodes(props);
         }
       }
-      class Player extends Node {
+      class Shape extends Node {
         constructor() {
           super();
-          /* setting up Player properties */
-          this.position = vec(100, 100);
-          this.size = vec(50, 50);
+          this.shape = vecGroup([0, 0], [0, 1], [1, 1], [0.5, 0.5], [1, 0]);
+          this.offset = vec(-50, -50);
+          this.position = vec(240, 240);
+          this.rotation = 0;
+          this.vertices = this.shape.timesn(100).plus(this.offset).plus(this.position);
         }
-        update({ keyboard: k }) {
-          /* create moving vector with keyboard WASD keys */
-          let moveX = (k.d ? 2 : 0) - (k.a ? 2 : 0);
-          let moveY = (k.s ? 2 : 0) - (k.w ? 2 : 0);
-          /* translate position with the vector */
-          this.position.add(vec(moveX, moveY));
+        update({ mouse }) {
+          this.position = mouse.position;
+          this.vertices = this.shape.timesn(100).plus(this.offset).rotate(this.rotation).add(this.position);
+          if (mouse.button[0]) this.rotation += 0.03;
         }
         render({ ctx }) {
-          /* render the Player */
-          ctx.fillStyle = "red";
-          ctx.fillRect(...this.position, ...this.size.array);
+          ctx.strokeStyle = ctx.fillStyle = "white";
+          ctx.beginPath();
+          this.vertices.each((v) => ctx.lineTo(...v));
+          ctx.lineTo(...this.vertices.vectors[0]);
+          if (Collision.shapes(this.vertices, staticShape.vertices)) ctx.fill();
+          else ctx.stroke();
         }
+        as;
       }
-      /* create the scene instance */
       let scene = new Scene();
-      /* add the Player to the scene */
-      scene.append(new Player());
-      /* create the engine */
+      let staticShape = new Shape();
+      staticShape.update = () => {};
+      scene.append(new Shape(), staticShape);
       let engine = new Engine({
         fps: 60,
         tps: 60,
-        usingKeyboard: true,
+        usingMouse: true,
         canvas: document.getElementById("canvas"),
         node: scene,
       });
-      /* start the engine */
       engine.run();
     </script>
     <script>
