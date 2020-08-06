@@ -4,6 +4,8 @@
 
 Some random lightweight Game Engine Tools Library that helps to create some casual games for school projects or whatever.
 
+Currently, this library probably has limited support for mobile devives, it might partially work or not at all.
+
 ---
 
 ### Classes
