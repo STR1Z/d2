@@ -1,6 +1,6 @@
-const getl = {
-  vec: (x, y) => new getl.Vector(x, y),
-  vecGroup: (...args) => getl.VectorGroup.pack(args),
+const d2 = {
+  vec: (x, y) => new d2.Vector(x, y),
+  vecGroup: (...args) => d2.VectorGroup.pack(args),
   Vector: class {
     constructor(x, y) {
       this.x = x;
@@ -73,7 +73,7 @@ const getl = {
     constructor(...vectors) {
       this.vectors = vectors;
     }
-    static pack = (a) => new this(...a.map((v) => new getl.Vector(v[0], v[1])));
+    static pack = (a) => new this(...a.map((v) => new d2.Vector(v[0], v[1])));
     each(fn) {
       this.vectors.forEach(fn);
       return this;
@@ -154,17 +154,17 @@ const getl = {
       let b_b = b1.y - b_m * b1.x;
       if (a_m == b_m) return a_b == b_b;
       let x = (b_b - a_b) / (a_m - b_m);
-      if (Math.min(Math.min(a1.x, a2.x), Math.min(b1.x, b2.x)) < x && x < Math.max(Math.max(a1.x, a2.x), Math.max(b1.x, b2.x))) return new getl.Vector(x, a_m * x + a_b);
+      if (Math.min(Math.min(a1.x, a2.x), Math.min(b1.x, b2.x)) < x && x < Math.max(Math.max(a1.x, a2.x), Math.max(b1.x, b2.x))) return new d2.Vector(x, a_m * x + a_b);
       return false;
     },
     shapeLine(group, p1, p2) {
-      for (let i = 1; i < group.size; i++) if (getl.Collision.lines(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
-      if (getl.Collision.lines(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
+      for (let i = 1; i < group.size; i++) if (d2.Collision.lines(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
+      if (d2.Collision.lines(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
       return false;
     },
     shapes(target, g) {
-      for (let i = 1; i < target.size; i++) if (getl.Collision.shapeLine(g, target.vectors[i - 1], target.vectors[i])) return true;
-      if (getl.Collision.shapeLine(g, target.vectors[target.size - 1], target.vectors[0])) return true;
+      for (let i = 1; i < target.size; i++) if (d2.Collision.shapeLine(g, target.vectors[i - 1], target.vectors[i])) return true;
+      if (d2.Collision.shapeLine(g, target.vectors[target.size - 1], target.vectors[0])) return true;
       return false;
     },
   },
@@ -207,14 +207,14 @@ const getl = {
       }
       if (usingMouse) {
         this.mouse = {
-          position: new getl.Vector(0, 0),
+          position: new d2.Vector(0, 0),
           button: {},
         };
         const mouseMoveHandler = (e) => {
           let rect = this.canvas.getBoundingClientRect(),
             scaleX = this.canvas.width / rect.width,
             scaleY = this.canvas.height / rect.height;
-          this.mouse.position = new getl.Vector((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
+          this.mouse.position = new d2.Vector((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
         };
         const mouseDownHandler = (e) => (this.mouse.button[e.button] = true);
         const mouseUpHandler = (e) => (this.mouse.button[e.button] = false);
