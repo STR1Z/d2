@@ -61,7 +61,7 @@
         render({ ctx }) {
           /* render the Box */
           ctx.fillStyle = this.color;
-          ctx.fillRect(...this.position.array, ...this.size.array);
+          ctx.fillRect(...this.position, ...this.size);
         }
       }
       /* create the scene instance */

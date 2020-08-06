@@ -112,6 +112,10 @@ const getl = {
         )
       );
     }
+
+    *[Symbol.iterator]() {
+      for (let v of this.vectors) yield v.array;
+    }
     get array() {
       return this.vectors.map((v) => [v.x, v.y]);
     }

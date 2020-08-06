@@ -12,7 +12,8 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script> -->
+    <script src="/getlib.js"></script>
   </head>
   <body>
     <div class="container">
@@ -65,13 +66,13 @@
           /* render line connecting mouse to Planet */
           ctx.strokeStyle = "white";
           ctx.beginPath();
-          ctx.moveTo(...mouse.position.array);
-          ctx.lineTo(...this.position.array);
+          ctx.moveTo(...mouse.position);
+          ctx.lineTo(...this.position);
           ctx.stroke();
           /* render the Planet */
           ctx.fillStyle = this.color;
           ctx.beginPath();
-          ctx.ellipse(...this.position.array, this.radius, this.radius, 0, 0, Math.PI * 2);
+          ctx.ellipse(...this.position, this.radius, this.radius, 0, 0, Math.PI * 2);
           ctx.fill();
         }
       }
