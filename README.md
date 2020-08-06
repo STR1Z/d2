@@ -140,10 +140,13 @@ An empty shell to create Game Objects.
 | append      | Pushes a Node to the subnodes | `...Array<Node>` ...subnodes |
 
 ```typescript
-renderProps = {
+//typescript to display the property types.
+interface renderProps {
   frames : Number, //Amount of frames rendered.
-  ctx : CanvasContext, //Used to draw on the canvas.
-  keyboard: Object<Char, Boolean>, //Used to get keyboard data.
+  ctx : CanvasRenderingContext2D, //Used to draw on the canvas.
+  keyboard: { //Used to get keyboard data.
+    String key : Boolean //is key down ?
+  },
   mouse: {
     position : Vector, //Position of the mouse.
     button : {
@@ -154,9 +157,11 @@ renderProps = {
   }
 }
 
-updateProps = {
+interface updateProps {
   ticks : Number, //Amount of updates.
-  keyboard: Object<Char, Boolean>, //Used to get keyboard data.
+  keyboard: { //Used to get keyboard data.
+    String key : Boolean // is key down ?
+  },
   mouse: {
     position : Vector, //Position of the mouse.
     button : {

@@ -73,8 +73,8 @@
             if (distance < collideDistance) {
               let collideAngle = difference.angle;
               let acceleration = vec(collideDistance - distance, 0).point(collideAngle);
-              this.velocity.sub(acceleration.timesn((nodes[i].radius / collideDistance) * 0.8));
-              nodes[i].velocity.add(acceleration.timesn((this.radius / collideDistance) * 0.8));
+              this.velocity.sub(acceleration.timesn(nodes[i].radius / collideDistance));
+              nodes[i].velocity.add(acceleration.timesn(this.radius / collideDistance));
             }
           }
         }
