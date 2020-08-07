@@ -12,9 +12,15 @@ const d2 = {
       this.y = length * Math.sin(a);
       return this;
     }
-    translate = (v) => this.add(v);
-    rotate = (v) => this.point(v + this.angle);
-    scale = (v) => (v instanceof this.constructor ? this.mul(v) : this.muln(v));
+    translate(v) {
+      return this.add(v);
+    }
+    rotate(v) {
+      return this.point(v + this.angle);
+    }
+    scale(v) {
+      return v instanceof this.constructor ? this.mul(v) : this.muln(v);
+    }
     add(v) {
       this.x += v.x;
       this.y += v.y;
@@ -45,12 +51,24 @@ const d2 = {
       this.y /= n;
       return this;
     }
-    plus = (v) => new this.constructor(this.x + v.x, this.y + v.y);
-    minus = (v) => new this.constructor(this.x - v.x, this.y - v.y);
-    times = (v) => new this.constructor(this.x * v.x, this.y * v.y);
-    timesn = (v) => new this.constructor(this.x * v, this.y * v);
-    over = (v) => new this.constructor(this.x / v.x, this.y / v.y);
-    overn = (v) => new this.constructor(this.x / v, this.y / v);
+    plus(v) {
+      return new this.constructor(this.x + v.x, this.y + v.y);
+    }
+    minus(v) {
+      return new this.constructor(this.x - v.x, this.y - v.y);
+    }
+    times(v) {
+      return new this.constructor(this.x * v.x, this.y * v.y);
+    }
+    timesn(v) {
+      return new this.constructor(this.x * v, this.y * v);
+    }
+    over(v) {
+      return new this.constructor(this.x / v.x, this.y / v.y);
+    }
+    overn(v) {
+      return new this.constructor(this.x / v, this.y / v);
+    }
 
     *[Symbol.iterator]() {
       yield this.x;
@@ -73,7 +91,9 @@ const d2 = {
     constructor(...vectors) {
       this.vectors = vectors;
     }
-    static pack = (a) => new this(...a.map((v) => new d2.Vector(v[0], v[1])));
+    static pack(a) {
+      return new this(...a.map((v) => new d2.Vector(v[0], v[1])));
+    }
     each(fn) {
       this.vectors.forEach(fn);
       return this;
@@ -82,22 +102,52 @@ const d2 = {
       for (let i = 1; i < this.size; i++) fn(this.vectors[i - 1], this.vectors[i]);
       fn(this.vectors[this.size - 1], this.vectors[0]);
     }
-    add = (g) => (g instanceof this.constructor ? this.each((v, i) => v.add(g.vectors[i])) : this.each((v) => v.add(g)));
-    sub = (g) => (g instanceof this.constructor ? this.each((v, i) => v.sub(g.vectors[i])) : this.each((v) => v.sub(g)));
-    mul = (g) => (g instanceof this.constructor ? this.each((v, i) => v.mul(g.vectors[i])) : this.each((v) => v.mul(g)));
-    div = (g) => (g instanceof this.constructor ? this.each((v, i) => v.div(g.vectors[i])) : this.each((v) => v.div(g)));
-    muln = (g) => (g instanceof this.constructor ? this.each((v, i) => v.muln(g.vectors[i])) : this.each((v) => v.muln(g)));
-    divn = (g) => (g instanceof this.constructor ? this.each((v, i) => v.divn(g.vectors[i])) : this.each((v) => v.divn(g)));
-    plus = (g) => this.copy.add(g);
-    minus = (g) => this.copy.sub(g);
-    times = (g) => this.copy.mul(g);
-    over = (g) => this.copy.over(g);
-    timesn = (g) => this.copy.muln(g);
-    overn = (g) => this.copy.divn(g);
+    add(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.add(g.vectors[i])) : this.each((v) => v.add(g));
+    }
+    sub(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.sub(g.vectors[i])) : this.each((v) => v.sub(g));
+    }
+    mul(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.mul(g.vectors[i])) : this.each((v) => v.mul(g));
+    }
+    div(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.div(g.vectors[i])) : this.each((v) => v.div(g));
+    }
+    muln(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.muln(g.vectors[i])) : this.each((v) => v.muln(g));
+    }
+    divn(g) {
+      return g instanceof this.constructor ? this.each((v, i) => v.divn(g.vectors[i])) : this.each((v) => v.divn(g));
+    }
+    plus(g) {
+      return this.copy.add(g);
+    }
+    minus(g) {
+      return this.copy.sub(g);
+    }
+    times(g) {
+      return this.copy.mul(g);
+    }
+    over(g) {
+      return this.copy.over(g);
+    }
+    timesn(g) {
+      return this.copy.muln(g);
+    }
+    overn(g) {
+      return this.copy.divn(g);
+    }
 
-    translate = (v) => this.each((e) => e.add(v));
-    rotate = (a) => this.each((v) => v.rotate(a));
-    scale = (v) => (typeof v == "number" ? this.each((e) => e.muln(v)) : this.each((e) => e.mul(v)));
+    translate(v) {
+      return this.each((e) => e.add(v));
+    }
+    rotate(a) {
+      return this.each((v) => v.rotate(a));
+    }
+    scale(v) {
+      return typeof v == "number" ? this.each((e) => e.muln(v)) : this.each((e) => e.mul(v));
+    }
     get copy() {
       return new this.constructor(...this.vectors.map((v) => v.copy));
     }
@@ -128,7 +178,7 @@ const d2 = {
   },
   Collision: {
     rectPoint: (ap, as, p) => Math.abs(ap.x - p.x) * 2 < as.x && Math.abs(ap.y - p.y) * 2 < as.y,
-    shapePoint(g, p) {
+    shapePoint: (g, p) => {
       let inside = false;
       for (let i = 0, j = g.size - 1; i < g.size; j = i++) {
         let xi = g.vectors[i].x,
@@ -140,14 +190,14 @@ const d2 = {
       return inside;
     },
     rects: (ap, as, bp, bs) => ap.x < bp.x + bs.x && ap.x + as.x > bp.x && ap.y < bp.y + bs.y && ap.y + as.y > bp.y,
-    lines(a1, a2, b1, b2) {
+    lines: (a1, a2, b1, b2) => {
       let det = (a2.x - a1.x) * (b2.y - b1.y) - (b2.x - b1.x) * (a2.y - a1.y);
       if (det === 0) return false;
       let lambda = ((b2.y - b1.y) * (b2.x - a1.x) + (b1.x - b2.x) * (b2.y - a1.y)) / det;
       let gamma = ((a1.y - a2.y) * (b2.x - a1.x) + (a2.x - a1.x) * (b2.y - a1.y)) / det;
       return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
     },
-    linesIntersection(a1, a2, b1, b2) {
+    linesIntersection: (a1, a2, b1, b2) => {
       let a_m = (a2.y - a1.y) / (a2.x - a1.x) + 1e-100;
       let a_b = a1.y - a_m * a1.x;
       let b_m = (b2.y - b1.y) / (b2.x - b1.x) + 1e-100;
@@ -157,17 +207,17 @@ const d2 = {
       if (Math.min(Math.min(a1.x, a2.x), Math.min(b1.x, b2.x)) < x && x < Math.max(Math.max(a1.x, a2.x), Math.max(b1.x, b2.x))) return new d2.Vector(x, a_m * x + a_b);
       return false;
     },
-    shapeLine(group, p1, p2) {
+    shapeLine: (group, p1, p2) => {
       for (let i = 1; i < group.size; i++) if (d2.Collision.lines(group.vectors[i - 1], group.vectors[i], p1, p2)) return true;
       if (d2.Collision.lines(group.vectors[group.size - 1], group.vectors[0], p1, p2)) return true;
       return false;
     },
-    shapes(target, g) {
+    shapes: (target, g) => {
       for (let i = 1; i < target.size; i++) if (d2.Collision.shapeLine(g, target.vectors[i - 1], target.vectors[i])) return true;
       if (d2.Collision.shapeLine(g, target.vectors[target.size - 1], target.vectors[0])) return true;
       return false;
     },
-    inGroup(group, fn) {},
+    inGroup: (group, fn) => {},
   },
   Node: class {
     constructor() {
