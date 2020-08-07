@@ -147,7 +147,7 @@ const d2 = {
       let gamma = ((a1.y - a2.y) * (b2.x - a1.x) + (a2.x - a1.x) * (b2.y - a1.y)) / det;
       return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
     },
-    lines_point(a1, a2, b1, b2) {
+    linesIntersection(a1, a2, b1, b2) {
       let a_m = (a2.y - a1.y) / (a2.x - a1.x) + 1e-100;
       let a_b = a1.y - a_m * a1.x;
       let b_m = (b2.y - b1.y) / (b2.x - b1.x) + 1e-100;
@@ -167,6 +167,7 @@ const d2 = {
       if (d2.Collision.shapeLine(g, target.vectors[target.size - 1], target.vectors[0])) return true;
       return false;
     },
+    inGroup(group, fn) {},
   },
   Node: class {
     constructor() {
