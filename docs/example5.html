@@ -31,7 +31,7 @@
       </div>
     </div>
     <script id="source">
-      const { vec, vecGroup, Collision, Engine, Node } = d2;
+      const { vec, vecGroup, collision, Engine, Node } = d2;
 
       class Scene extends Node {
         render(props) {
@@ -63,10 +63,9 @@
           ctx.beginPath();
           this.vertices.each((v) => ctx.lineTo(...v));
           ctx.lineTo(...this.vertices.vectors[0]);
-          if (Collision.shapes(this.vertices, staticShape.vertices)) ctx.fill();
+          if (collision.shapes(this.vertices, staticShape.vertices)) ctx.fill();
           else ctx.stroke();
         }
-        as;
       }
       let scene = new Scene();
       let staticShape = new Shape();

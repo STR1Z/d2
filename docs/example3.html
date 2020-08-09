@@ -30,8 +30,8 @@
       </div>
     </div>
     <script id="source">
-      /* extract vec, Collision, Engine, Node */
-      const { vec, Collision, Engine, Node } = d2;
+      /* extract vec, collision, Engine, Node */
+      const { vec, collision, Engine, Node } = d2;
       /* getting the canvas */
 
       class Scene extends Node {
@@ -76,7 +76,7 @@
         let acceleration = vec(0, 0.1);
         box.velocity.add(acceleration);
         let futurePosition = box.position.plus(box.velocity);
-        if (Collision.rects(futurePosition, box.size, floor.position, floor.size)) return box.velocity.muln(-0.9);
+        if (collision.rects(futurePosition, box.size, floor.position, floor.size)) return box.velocity.muln(-0.9);
         /* remove jittering */
         if (box.velocity.length > 0.1) box.position.add(box.velocity);
       };

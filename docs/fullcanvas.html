@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plugin Tests</title>
+    <script src="/d2.js"></script>
+    <script src="/plugins/fullcanvas/fullcanvas.js"></script>
+    <script src="/plugins/joystick/joystick.js"></script>
+    <script src="/plugins/loadscreen/loadscreen.js"></script>
+    <style>
+      .d2-loadscreen {
+        background: black;
+        color: white;
+        font-family: monospace;
+        text-align: center;
+        padding-top: 25%;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let { Engine, vec, Node, loadscreen } = d2;
+      loadscreen.init();
+      loadscreen.show();
+      loadscreen.display("loading");
+      setTimeout(() => {
+        loadscreen.waitForClick().then(() => loadscreen.hide());
+      }, 1000);
+      class Scene extends Node {
+        render(props) {
+          /* extract ctx */
+          let { ctx } = props;
+          /* draw background */
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          /* render subnodes */
+          this.renderNodes(props);
+        }
+        update(props) {
+          /* update subnodes */
+          this.updateNodes(props);
+        }
+      }
+      class Player extends Node {
+        constructor() {
+          super();
+          /* setting up Player properties */
+          this.position = vec(100, 100);
+          this.size = vec(50, 50);
+        }
+        update({ joystick }) {
+          this.position.add(joystick.vector.timesn(15));
+        }
+        render({ ctx }) {
+          /* render the Player */
+          ctx.fillStyle = "red";
+          ctx.fillRect(...this.position, ...this.size);
+        }
+      }
+      /* create the scene instance */
+      let scene = new Scene();
+      /* add the Player to the scene */
+      scene.append(new Player());
+      /* create the engine */
+      let engine = new Engine({
+        fps: 60,
+        tps: 60,
+        usingJoystick: true,
+        usingFullcanvas: true,
+        canvas: document.getElementById("canvas"),
+        node: scene,
+      });
+      /* start the engine */
+      engine.run();
+    </script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example 2</title>
+    <title>Example 6</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
     <link
       rel="stylesheet"
@@ -18,11 +18,12 @@
   <body>
     <div class="container">
       <h3 class="mt-4">D2 Library</h3>
-      <h4 class="mb-4">Example 2 - Mouse Position</h4>
+      <h4 class="mb-4">Example 6 - Images</h4>
 
       <div class="row">
         <div class="col-lg-5">
           <canvas id="canvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
+          WASD to move the square.
         </div>
         <div class="col-lg-7">
           <pre style="text-align: left;"><code class="javascript" id="show"></code></pre>
@@ -30,71 +31,44 @@
       </div>
     </div>
     <script id="source">
-      /* extract vec, Engine, Node */
-      const { vec, Engine, Node } = d2;
-      /* getting the canvas */
+      const { vec, collision, Engine, Node, preload } = d2;
+
+      addEventListener("click", () => {
+        d2.preload({ audio: { music: "/docs/music2.mp3" } }).then(() => {
+          d2.assets.audio.music.play();
+        });
+      });
 
       class Scene extends Node {
         render(props) {
-          /* extract ctx */
           let { ctx } = props;
-          /* draw background */
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, 480, 480);
-          /* render subnodes */
           this.renderNodes(props);
         }
         update(props) {
-          /* update subnodes */
           this.updateNodes(props);
         }
       }
-      class Planet extends Node {
+      class Player extends Node {
         constructor() {
           super();
-          /* setting up Planet properties */
-          this.position = vec(Math.random() * 480, Math.random() * 480);
-          this.radius = Math.random() * 5 + 5;
-          this.velocity = vec(0, 0);
-          this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+          this.position = vec(100, 100);
+          this.size = vec(50, 50);
         }
-        update({ pointer }) {
-          this.velocity.add(pointer.position.minus(this.position).overn(1000 * this.radius));
-
-          this.position.add(this.velocity);
-        }
-        render({ ctx, pointer }) {
-          /* render line connecting mouse to Planet */
-          ctx.strokeStyle = "white";
-          ctx.beginPath();
-          ctx.moveTo(...pointer.position);
-          ctx.lineTo(...this.position);
-          ctx.stroke();
-          /* render the Planet */
-          ctx.fillStyle = this.color;
-          ctx.beginPath();
-          ctx.ellipse(...this.position, this.radius, this.radius, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        update({ keyboard: k }) {}
+        render({ ctx }) {}
       }
-      /* create the scene instance */
+
       let scene = new Scene();
-      /* add the Planet to the scene */
-      scene.append(
-        ...Array(50)
-          .fill()
-          .map(() => new Planet())
-      );
-      /* create the engine */
+      scene.append(new Player());
       let engine = new Engine({
         fps: 60,
         tps: 60,
-        usingMouse: true,
-        usingTouch: true,
+        usingKeyboard: true,
         canvas: document.getElementById("canvas"),
         node: scene,
       });
-      /* start the engine */
       engine.run();
     </script>
     <script>

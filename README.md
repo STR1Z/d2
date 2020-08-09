@@ -17,9 +17,10 @@ Currently, this library probably has limited support for mobile devives, it migh
 
 ### Utility
 
-- Colision
+- colision
 - vec
 - vecGroup
+- preload
 
 ---
 
@@ -147,7 +148,11 @@ interface renderProps {
   frames : Number, //Amount of frames rendered.
   ctx : CanvasRenderingContext2D, //Used to draw on the canvas.
   keyboard: { //Used to get keyboard data.
-    String key : Boolean //is key down ?
+    String key : Boolean, //is key down ?
+    event: {
+      up: KeyupEvent,
+      down: KeydownEvent
+    }
   },
   mouse: {
     position : Vector, //Position of the mouse.
@@ -155,6 +160,20 @@ interface renderProps {
       0 : Boolean, // is mouse primary button down ?
       1 : Boolean, // is mouse middle button down ?
       2 : Boolean, // is mouse secondary button down ?
+    },
+    event: {
+      up: MouseupEvent,
+      down: MousedownEvent,
+      move: MousemoveEvent
+    }
+  },
+  touch: {
+    position: Vector, //Position of the last touch.
+    down: Boolean, // is user touching the screen ?
+    event: {
+      move: TouchmoveEvent,
+      start: TouchstartEvent,
+      end: TouchendEvent
     }
   }
 }
@@ -162,7 +181,11 @@ interface renderProps {
 interface updateProps {
   ticks : Number, //Amount of updates.
   keyboard: { //Used to get keyboard data.
-    String key : Boolean // is key down ?
+    String key : Boolean, //is key down ?
+    event: {
+      up: KeyupEvent,
+      down: KeydownEvent
+    }
   },
   mouse: {
     position : Vector, //Position of the mouse.
@@ -170,6 +193,20 @@ interface updateProps {
       0 : Boolean, // is mouse primary button down ?
       1 : Boolean, // is mouse middle button down ?
       2 : Boolean, // is mouse secondary button down ?
+    },
+    event: {
+      up: MouseupEvent,
+      down: MousedownEvent,
+      move: MousemoveEvent
+    }
+  },
+  touch: {
+    position: Vector, //Position of the last touch.
+    down: Boolean, // is user touching the screen ?
+    event: {
+      move: TouchmoveEvent,
+      start: TouchstartEvent,
+      end: TouchendEvent
     }
   }
 }
@@ -187,6 +224,7 @@ let config = {
   node: myScene,
   usingKeyboard: true,
   usingMouse: true,
+  usingTouch: true,
 };
 let engine = new d2.Engine(config);
 engine.run();
@@ -205,6 +243,7 @@ engine.destroy();
 | canvas        | Dom canvas element         | `undefined` | `HTMLElement` |
 | usingKeyboard | Listen for keyboard events | `false`     | `Boolean`     |
 | usingMouse    | Listen for mouse events    | `false`     | `Boolean`     |
+| usingTouch    | Listen for touch events    | `false`     | `Boolean`     |
 
 ---
 
@@ -215,11 +254,16 @@ Name | Description | Return type | Param 0 | Param 1 | Param 2 | Param 4
 -----|-------------|-------------|---------|---------|---------|---------
 rectPoint | Checks if a point is inside a rectangle. | `Boolean` | `Vector` Rectangle position | `Vector` rectangle size | `Vector` point position |
 shapePoint | Checks if a point is inside a shape formed with vertices. | `Boolean` | `VectorGroup` shape | `Vector` point position |
+circleLine | Checks if a point is inside a circle | `Boolean` | `Vector` circle postion | `Number` circle radius | `Vector` Point position
 rects | Checks if two rectangle collides. | `Boolean` | `Vector` Rectangle A position |`Vector` rectangle A size | `Vector` rectangle B position | `Vector` rectangle B size
 lines | Checks if two lines crosses. | `Boolean` | `Vector` line A start | `Vector` line A end | `Vector` line B start | `Vector` line B end
 linesIntersection | Get the intersetion point of two lines, if lines touches and are parallel return `true`, otherwise return `false` | `Vector` or `Boolean` | `Vector`line A start | `Vector` line A end | `Vector` line B start | `Vector` line B end
 shapeLine | Checks if a shape and a line are colliding | `Boolean` | `VectorGroup` shape | `Vector` line start | `Vector` line end |
+circleLine | Checks if a circle and a line are colliding | `Boolean` | `Vector` circle position | `Number` circle radius | `Vector` Line start point | `Vector` Line end point |
 shapes | Checks if two shapes are colliding | `Boolean` | `VectorGroup` shape A | `VectorGroup` shape B |
+circles | Checks if two cirlces are colliding | `Boolean` | `Vector` circle A position | `Number` circle A radius | `Vector` circle B position | `Number` circle B radius|
+shapeCircle | Checks if a shape and circle are colliding | `Boolean` | `VectorGroup` shape | `Vector` circle position | `Number` circle radius |
+betweenNodes | Iterates through a group of nodes efficiently | `undefined` | `function(Node, Node)` handler |
 
 ### vec
 
@@ -235,4 +279,28 @@ Shorthand to create a vector group.
 
 ```javascript
 let myGroup = d2.vecGroup([0, 0], [0, 1], [1, 1], [1, 0]);
+```
+
+### preload
+
+To preload images, audio and videos. Return a promise.
+
+```js
+preload({
+  image: {
+    someImage: "/images/your_image.png",
+  },
+  audio: {
+    someAudio: "/audio/your_audio.mp3",
+  },
+  video: {
+    someVideo: "/videos/your_video.mp4",
+  },
+}).then(() => {
+  // To access the preloaded DOM elements
+  d2.assets.audio.play();
+  // The 'assets' object will also be available in renderProps and updateProps.
+  // Usually the engine starts here...
+  engine.run();
+});
 ```
