@@ -4,6 +4,10 @@ const d2 = {
       this.x = x;
       this.y = y;
     }
+    valueOf() {
+      return this.length;
+    }
+
     point(a) {
       let length = this.length;
       this.x = length * Math.cos(a);
@@ -83,6 +87,15 @@ const d2 = {
     }
     get copy() {
       return new this.constructor(this.x, this.y);
+    }
+    get floor() {
+      return new this.constructor(Math.floor(this.x), Math.floor(this.y));
+    }
+    get ceil() {
+      return new this.constructor(Math.ceil(this.x), Math.ceil(this.y));
+    }
+    get round() {
+      return new this.constructor(Math.round(this.x), Math.round(this.y));
     }
   },
   VectorGroup: class {

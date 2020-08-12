@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Example 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/default.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/STR1Z/getlib@latest/getlib.js"></script> -->
+    <script src="/d2.js"></script>
+    <script src="/plugins/audiolize/audiolize.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="mt-4">D2 Library</h3>
+      <h4 class="mb-4">Example 1 - Keyboard Inputs</h4>
+
+      <div class="row">
+        <div class="col-lg-5">
+          <canvas id="canvas" width="480" height="480" class="shadow" style="width: 100%;"></canvas>
+          WASD to move the square.
+        </div>
+        <div class="col-lg-7">
+          <pre style="text-align: left;"><code class="javascript" id="show"></code></pre>
+        </div>
+      </div>
+    </div>
+    <script id="source">
+      /* extract vec, Engine, Node */
+      const { vec, Engine, Node, preload } = d2;
+      /* getting the canvas */
+
+      let al;
+
+      class Scene extends Node {
+        render(props) {
+          let { ctx } = props;
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, 480, 480);
+          ctx.strokeStyle = "white";
+          ctx.beginPath();
+
+          al.current.forEach((v, i) => ctx.lineTo(i * (canvas.width / al.size), canvas.height - v));
+          ctx.stroke();
+          let average = al.average;
+          ctx.moveTo(0, canvas.height - average);
+          ctx.lineTo(canvas.width, canvas.height - average);
+          ctx.stroke();
+        }
+        update(props) {
+          this.updateNodes(props);
+        }
+      }
+
+      let scene = new Scene();
+
+      let engine = new Engine({
+        fps: 60,
+        tps: 60,
+        canvas: document.getElementById("canvas"),
+        node: scene,
+      });
+
+      preload({
+        audio: {
+          misfit: "/misfit.mp3",
+        },
+      }).then(() => {
+        al = new d2.Audiolize();
+        al.init(d2.assets.audio.misfit, 2 ** 8);
+        engine.run();
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", (event) => {
+        document.getElementById("show").innerText = document.getElementById("source").innerText.replace(/      /g, "");
+        hljs.highlightBlock(document.getElementById("show"));
+      });
+    </script>
+  </body>
+</html>
